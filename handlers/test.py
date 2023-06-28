@@ -1,4 +1,4 @@
-from bot import bot, dp, config
+from bot import dp
 
 from aiogram import types
 

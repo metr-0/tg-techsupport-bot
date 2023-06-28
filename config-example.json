@@ -1,4 +1,9 @@
 {
   "token": "tg token",
-  "chatId": 0
+  "chatId": 0,
+  "mongodb": {
+    "host": "localhost",
+    "port": 27017,
+    "database": "support-bot"
+  }
 }
