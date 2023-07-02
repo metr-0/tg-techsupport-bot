@@ -13,9 +13,9 @@
 
     mv config/config-example.json config/config.json
 
-Добавьте токен бота и ID чата техподдержки в config/config.json
+Добавьте токен бота и ID чата техподдержки в `config/config.json`
 
-На своё усмотрение отредактируйте ответы бота в config/templates.json
+На своё усмотрение отредактируйте ответы бота в `config/templates.json`
 
 ### Запуск:
 
