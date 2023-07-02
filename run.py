@@ -1,10 +1,7 @@
-from aiogram import executor
-from bot import *
+import asyncio
 
-from handlers.signup import *
-from handlers.test import *
-from handlers.answer import *
-from handlers.question import *
+from bot import main
+from handlers import *
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    asyncio.run(main())
