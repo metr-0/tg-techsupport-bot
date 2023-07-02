@@ -1,6 +1,6 @@
 from aiogram.filters import Command
 
-from bot import dp, config
+from bot import dp, config, templates
 
 from aiogram import types, F, Bot
 
@@ -10,9 +10,9 @@ async def ping(message: types.Message) -> None:
     await message.reply('pong')
 
 
-@dp.message(Command('start', 'help'))
+@dp.message(F.chat.type == 'private' and Command('start', 'help'))
 async def help_msg(message: types.Message) -> None:
-    await message.reply('*Тут будут помощь*')
+    await message.reply(templates['helpMessage'])
 
 
 @dp.message(
@@ -23,12 +23,12 @@ async def answer(message: types.Message, bot: Bot) -> None:
 
     await bot.send_message(
         chat_id=user_id,
-        text='Получен ответ от техподдержки:'
+        text=templates['answerReceived']
     )
     await message.forward(
         chat_id=user_id
     )
-    await message.reply('Ваш ответ отправлен!')
+    await message.reply(templates['answerSent'])
 
 
 @dp.message(F.chat.type == 'private')
@@ -36,4 +36,4 @@ async def question(message: types.Message) -> None:
     await message.forward(
         chat_id=config['chatId']
     )
-    await message.reply('Ваше обращение отправлено в техподдержку!')
+    await message.reply(templates['questionSent'])
