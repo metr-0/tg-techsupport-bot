@@ -14,6 +14,8 @@ with open('config/templates.json', 'r', encoding='utf-8') as templates_file:
 bot = Bot(token=config['token'])
 dp = Dispatcher()
 
+bot_id = bot.id
+
 
 async def main() -> None:
     await dp.start_polling(bot)

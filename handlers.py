@@ -1,6 +1,6 @@
 from aiogram.filters import Command
 
-from bot import dp, config, templates
+from bot import dp, config, templates, bot_id
 
 from aiogram import types, F, Bot
 
@@ -21,7 +21,8 @@ async def help_msg(message: types.Message) -> None:
 
 
 @dp.message(
-    F.chat.id == config['chatId'] and F.reply_to_message.forward_from
+    F.chat.id == config['chatId'] and
+    F.reply_to_message[F.from_user.id == bot_id].forward_from
 )
 async def answer(message: types.Message, bot: Bot) -> None:
     user_id = message.reply_to_message.forward_from.id
