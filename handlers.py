@@ -32,8 +32,10 @@ async def answer(message: types.Message, bot: Bot) -> None:
             text=templates['answerReceived']
         )
 
-    await message.forward(chat_id=user_id)
-    await message.reply(templates['answerSent'])
+    await message.copy_to(chat_id=user_id)
+
+    if config['systemMessages']:
+        await message.reply(templates['answerSent'])
 
 
 @dp.message(F.chat.type == 'private')
