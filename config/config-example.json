@@ -1,5 +1,6 @@
 {
   "token": "tg token",
   "chatId": 0,
-  "systemMessages": true
+  "systemMessages": true,
+  "loggingLevel": "INFO"
 }
