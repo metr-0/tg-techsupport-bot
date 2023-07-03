@@ -1,4 +1,5 @@
 {
   "token": "tg token",
-  "chatId": 0
+  "chatId": 0,
+  "systemMessages": true
 }

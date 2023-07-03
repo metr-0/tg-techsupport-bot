@@ -1,8 +1,7 @@
 from aiogram.filters import Command
+from aiogram import types, F, Bot
 
 from bot import dp, config, templates, bot_id
-
-from aiogram import types, F, Bot
 
 
 @dp.message(Command('ping'))
@@ -27,10 +26,12 @@ async def help_msg(message: types.Message) -> None:
 async def answer(message: types.Message, bot: Bot) -> None:
     user_id = message.reply_to_message.forward_from.id
 
-    await bot.send_message(
-        chat_id=user_id,
-        text=templates['answerReceived']
-    )
+    if config['systemMessages']:
+        await bot.send_message(
+            chat_id=user_id,
+            text=templates['answerReceived']
+        )
+
     await message.forward(chat_id=user_id)
     await message.reply(templates['answerSent'])
 
@@ -38,4 +39,6 @@ async def answer(message: types.Message, bot: Bot) -> None:
 @dp.message(F.chat.type == 'private')
 async def question(message: types.Message) -> None:
     await message.forward(chat_id=config['chatId'])
-    await message.reply(templates['questionSent'])
+
+    if config['systemMessages']:
+        await message.reply(templates['questionSent'])
