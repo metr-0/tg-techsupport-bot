@@ -3,6 +3,8 @@ from aiogram import types, F, Bot
 
 from bot import dp, config, templates, bot_id
 
+messages = {}
+
 
 @dp.message(Command('ping'))
 async def ping(message: types.Message) -> None:
@@ -21,10 +23,21 @@ async def help_msg(message: types.Message) -> None:
 
 @dp.message(
     F.chat.id == config['chatId'] and
-    F.reply_to_message[F.from_user.id == bot_id].forward_from
+    F.reply_to_message.from_user.id == bot_id
 )
 async def answer(message: types.Message, bot: Bot) -> None:
-    user_id = message.reply_to_message.forward_from.id
+    cashed_user_id = messages.get(message.reply_to_message.message_id, None)
+
+    try:
+        user_id = message.reply_to_message.forward_from.id
+    except Exception as _:
+        user_id = cashed_user_id
+
+    if not user_id:
+        user_id = cashed_user_id
+    if not user_id:
+        await message.reply(templates['userNotFound'])
+        return
 
     if config['systemMessages']:
         await bot.send_message(
@@ -32,7 +45,10 @@ async def answer(message: types.Message, bot: Bot) -> None:
             text=templates['answerReceived']
         )
 
-    await message.copy_to(chat_id=user_id)
+    try:
+        await message.copy_to(chat_id=user_id)
+    except Exception as _:
+        await message.reply(templates['cantSend'])
 
     if config['systemMessages']:
         await message.reply(templates['answerSent'])
@@ -40,7 +56,13 @@ async def answer(message: types.Message, bot: Bot) -> None:
 
 @dp.message(F.chat.type == 'private')
 async def question(message: types.Message) -> None:
-    await message.forward(chat_id=config['chatId'])
+    try:
+        result = await message.forward(chat_id=config['chatId'])
+    except Exception as _:
+        await message.reply(templates['cantSend'])
+        return
+
+    messages[result.message_id] = message.from_user.id
 
     if config['systemMessages']:
         await message.reply(templates['questionSent'])
